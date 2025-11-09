@@ -1,0 +1,117 @@
+╔══════════════════════════════════════════════════════════════╗
+║              BOT HAILGAMES - GUIA RÁPIDO                     ║
+║         Minecraft Bedrock Edition 1.21.120.4                 ║
+╚══════════════════════════════════════════════════════════════╝
+
+📱 INSTALAÇÃO NO TERMUX:
+
+1. Abra o Termux
+2. Execute:
+   cd storage/downloads
+   unzip bot-hailgames.zip
+   cd bot-hailgames
+   chmod +x install_termux.sh
+   ./install_termux.sh
+
+3. Aguarde a instalação
+
+4. Inicie o bot:
+   python main.py
+
+
+🎮 COMANDOS DO BOT:
+
+IMPORTANTE: Todos os comandos devem começar com !BOT
+
+Exemplos:
+  !BOT venha até mim
+  !BOT pegue madeira pra mim e me entregue
+  !BOT me siga
+  !BOT pare
+  !BOT colete 20 pedras
+
+
+⚙️ CONFIGURAÇÃO:
+
+Servidor: FizAnal.aternos.me:45203
+API Key: Já configurada
+Nome do Bot: bot Hailgames
+
+Para alterar, edite: config.json
+
+
+🔧 PROBLEMAS COMUNS:
+
+Bot não conecta:
+  → Verifique se o servidor Aternos está ONLINE
+  → Confirme sua conexão com internet
+
+Erro de API:
+  → Verifique a API key no config.json
+
+Bot não responde:
+  → Use o prefixo !BOT antes do comando
+  → Exemplo: "!BOT olá"
+
+
+📞 COMANDOS ÚTEIS:
+
+Iniciar bot:
+  python main.py
+
+Parar bot:
+  Ctrl + C
+
+Ver logs:
+  Os logs aparecem no console automaticamente
+
+
+💡 DICAS:
+
+✓ O bot entende linguagem natural
+✓ Não precisa digitar comandos exatos
+✓ A IA Gemini interpreta suas intenções
+✓ Seja claro nos seus pedidos
+
+
+🎯 EXEMPLOS PRÁTICOS:
+
+Cenário 1 - Buscar recursos:
+  Você: !BOT pegue 10 madeiras
+  Bot: Vou coletar madeira e entregar para você!
+  [Bot coleta e entrega]
+
+Cenário 2 - Seguir:
+  Você: !BOT me siga
+  Bot: Vou seguir você!
+  [Bot começa a seguir]
+
+Cenário 3 - Ir até você:
+  Você: !BOT venha aqui
+  Bot: Indo até você!
+  [Bot vai até sua posição]
+
+
+📚 ARQUIVOS IMPORTANTES:
+
+config.json          - Configurações do bot
+main.py             - Arquivo principal
+README.md           - Documentação completa
+install_termux.sh   - Instalador
+
+
+🌐 INFORMAÇÕES DO SERVIDOR:
+
+Endereço: FizAnal.aternos.me
+Porta: 45203
+Versão: Bedrock 1.21.120.4
+
+⚠️ LEMBRE-SE: Servidores Aternos desligam sozinhos!
+   Inicie o servidor antes de conectar o bot.
+
+
+═══════════════════════════════════════════════════════════════
+
+Bom jogo! 🎮
+
+Para documentação completa, veja: README.md

@@ -1,0 +1,10 @@
+{
+    "bot_name": "bot Hailgames",
+    "server": {
+        "host": "seu_servidor.aternos.me",
+        "port": 19132
+    },
+    "gemini_api_key": "SUA_API_KEY_AQUI",
+    "command_prefix": "!BOT",
+    "bot_version": "1.21.120.4"
+}

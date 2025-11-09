@@ -1,244 +1,236 @@
-# 🤖 Bot Hailgames - Minecraft Bedrock
+# Bot Hailgames - Minecraft Bedrock Edition
 
-Bot inteligente para Minecraft Bedrock 1.21.x controlado pela IA Gemini do Google. O bot executa comandos em linguagem natural e pode realizar diversas ações no jogo.
+Bot inteligente para Minecraft Bedrock Edition 1.21.120.4, controlado pela IA Gemini do Google.
 
-## 📋 Características
+## 🎮 Características
 
-- 🧠 **Controlado por IA**: Usa Google Gemini para entender comandos em português
-- 🎮 **Minecraft Bedrock**: Compatível com versão 1.21.x
-- 📱 **Funciona no Termux**: Roda perfeitamente em dispositivos Android
-- 🗣️ **Comandos Naturais**: Use linguagem natural após o prefixo `!BOT`
-- 🎯 **Ações Inteligentes**: Navegação, mineração, entrega de itens e mais
+- **IA Avançada**: Controlado pela API Gemini para processamento natural de comandos
+- **Comandos Inteligentes**: Responde apenas quando você usa o prefixo `!BOT`
+- **Ações Autônomas**: 
+  - Ir até jogadores
+  - Coletar blocos (madeira, pedra, etc)
+  - Entregar itens
+  - Seguir jogadores
+  - Conversar no chat
+
+## 📋 Requisitos
+
+- Termux (Android)
+- Python 3.10+
+- Conexão com internet
+- Servidor Minecraft Bedrock
 
 ## 🚀 Instalação no Termux
 
-### 1. Instalar o Termux
-Baixe o Termux na [F-Droid](https://f-droid.org/en/packages/com.termux/) ou [GitHub](https://github.com/termux/termux-app/releases)
+### 1. Instalar Termux
+Baixe o Termux da F-Droid ou Google Play Store.
 
-⚠️ **IMPORTANTE**: NÃO use o Termux da Play Store (está desatualizado)
-
-### 2. Atualizar pacotes do Termux
+### 2. Clonar/Extrair o projeto
 ```bash
-pkg update && pkg upgrade -y
+cd storage/downloads
+unzip bot-hailgames.zip
+cd bot-hailgames
 ```
 
-### 3. Instalar Node.js
+### 3. Executar instalador
 ```bash
-pkg install nodejs-lts -y
+chmod +x install_termux.sh
+./install_termux.sh
 ```
 
-### 4. Instalar Git
+### 4. Iniciar o bot
 ```bash
-pkg install git -y
+python main.py
 ```
 
-### 5. Clonar o repositório
+Ou use o script:
 ```bash
-git clone https://github.com/deivid22srk/Bot-minecraft.git
-cd Bot-minecraft
-```
-
-### 6. Dar permissão aos scripts
-```bash
-chmod +x *.sh
-```
-
-### 7. Instalar dependências
-```bash
-./install-termux.sh
-```
-
-⚠️ **NOTA**: Você pode ver avisos sobre módulos nativos (`raknet-native`). Isso é normal! O bot funcionará mesmo com esses avisos.
-
-### 8. Iniciar o bot
-```bash
-npm start
-```
-
-ou
-
-```bash
+chmod +x start.sh
 ./start.sh
 ```
 
 ## ⚙️ Configuração
 
-Arquivo `config.json`:
+Edite o arquivo `config.json` para personalizar:
+
 ```json
 {
-  "botName": "bot Hailgames",
-  "server": {
-    "host": "FizAnal.aternos.me",
-    "port": 45203,
-    "version": "1.21.50"
-  },
-  "gemini": {
-    "apiKey": "SUA_API_KEY_AQUI"
-  },
-  "commandPrefix": "!BOT"
+    "bot_name": "bot Hailgames",
+    "server": {
+        "host": "FizAnal.aternos.me",
+        "port": 45203
+    },
+    "gemini_api_key": "SUA_API_KEY_AQUI",
+    "command_prefix": "!BOT",
+    "bot_version": "1.21.120.4"
 }
 ```
 
-## 🎮 Como Usar
+## 🎯 Como Usar
 
-### Comandos Disponíveis
+### Comandos Básicos
 
-O bot responde apenas a mensagens que começam com `!BOT`. Exemplos:
+Todos os comandos devem começar com `!BOT`:
 
-#### 🚶 Navegação
+#### Navegação
 ```
 !BOT venha até mim
-!BOT venha aqui
-!BOT vem cá
-```
-
-#### ⛏️ Mineração
-```
-!BOT pegue 10 madeiras
-!BOT mine pedra para mim
-!BOT colete carvão
-```
-
-#### 🎁 Entrega de Itens
-```
-!BOT me entregue a madeira
-!BOT traga os itens
-!BOT dê os recursos para mim
-```
-
-#### 👥 Seguir Jogador
-```
 !BOT me siga
-!BOT pare de seguir
+!BOT pare
 ```
 
-#### 💬 Conversa
+#### Coleta e Entrega
+```
+!BOT pegue madeira pra mim e me entregue
+!BOT colete 20 pedras e traga para mim
+!BOT busque terra
+```
+
+#### Interação
 ```
 !BOT olá
-!BOT como você está?
 !BOT o que você pode fazer?
 ```
 
-## 🐛 Solução de Problemas
+### Exemplos Práticos
 
-### Erro de compilação do raknet-native
-
-**Sintoma**: Erros durante `npm install` relacionados a `raknet-native` ou `node-addon-api`
-
-**Solução**:
-```bash
-# Use a instalação sem módulos opcionais
-npm install --no-optional
+**Exemplo 1: Buscar recursos**
+```
+Jogador: !BOT pegue madeira pra mim e me entregue
+Bot: Vou coletar madeira e entregar para você!
+Bot: Procurando madeira...
+Bot: Coletei 10 madeira!
+Bot: Indo até você!
+Bot: Entreguei 10 madeira para você!
 ```
 
-ou
-
-```bash
-# Use o instalador fornecido
-./install-termux.sh
+**Exemplo 2: Seguir jogador**
+```
+Jogador: !BOT me siga
+Bot: Vou seguir você!
+[Bot começa a seguir o jogador]
 ```
 
-Esses erros são normais no Termux e o bot funcionará mesmo assim! 
-
-### Bot não conecta ao servidor
-- ✅ Verifique se o servidor está online (Aternos precisa estar ativo)
-- ✅ Confirme o endereço e porta em `config.json`
-- ✅ Verifique sua conexão com a internet
-
-### Bot não responde aos comandos
-- ✅ Certifique-se de usar o prefixo `!BOT`
-- ✅ Verifique se a API Key do Gemini está correta
-- ✅ Veja os logs no console para mais detalhes
-
-### Erro "API Key inválida"
-- ✅ Verifique se a API Key do Gemini está correta em `config.json`
-- ✅ Obtenha uma nova key em: https://makersuite.google.com/app/apikey
-
-## 📱 Dicas para Termux
-
-### Manter bot rodando em background
-```bash
-# Instalar tmux
-pkg install tmux
-
-# Criar sessão
-tmux new -s minecraft-bot
-
-# Iniciar bot
-npm start
-
-# Desanexar: Ctrl+B e depois D
-# Reanexar: tmux attach -t minecraft-bot
+**Exemplo 3: Ir até jogador**
+```
+Jogador: !BOT venha ate min
+Bot: Indo até você!
+Bot: Cheguei até você!
 ```
 
-### Economizar bateria
-1. Abra o menu lateral do Termux
-2. Ative "Acquire wakelock"
-3. Reduza o brilho da tela
-4. Desative conexões desnecessárias
+## 🤖 Funcionalidades da IA
 
-### Atalhos do Termux
-- `Volume Up + Q` - Mostrar teclas extras
-- `Volume Up + C` - Copiar
-- `Volume Up + V` - Colar
-- `Ctrl + C` - Parar programa
-- `Ctrl + L` - Limpar tela
+O bot usa a IA Gemini para entender comandos naturais. Você não precisa usar comandos exatos, a IA entende variações como:
+
+- "venha aqui" = "vem até mim" = "vem pra cá"
+- "pegue madeira" = "colete wood" = "busque árvores"
+- "me siga" = "siga-me" = "vem comigo"
 
 ## 📁 Estrutura do Projeto
 
 ```
-Bot-minecraft/
-├── index.js              # Arquivo principal do bot
-├── geminiAI.js           # Integração com Google Gemini
-├── pathfinding.js        # Sistema de navegação
-├── botActions.js         # Ações do bot (minerar, entregar, etc)
-├── config.json           # Configurações
-├── package.json          # Dependências do Node.js
-├── install-termux.sh     # Script de instalação
-├── start.sh              # Script para iniciar
-├── README.md             # Este arquivo
-├── TERMUX_GUIDE.md       # Guia detalhado do Termux
-└── EXAMPLES.md           # Exemplos de comandos
+bot-hailgames/
+├── main.py                  # Arquivo principal
+├── bot_client.py           # Cliente do bot
+├── bedrock_connection.py   # Conexão com servidor Bedrock
+├── bot_actions.py          # Ações do bot (movimento, coleta, etc)
+├── gemini_handler.py       # Integração com Gemini AI
+├── config.json             # Configurações
+├── requirements.txt        # Dependências Python
+├── install_termux.sh       # Script de instalação
+├── start.sh               # Script para iniciar
+└── README.md              # Este arquivo
 ```
 
-## 🔧 Dependências
+## 🔧 Solução de Problemas
 
-- **bedrock-protocol**: Conexão com servidores Minecraft Bedrock
-- **@google/generative-ai**: API do Google Gemini
-- **prismarine-physics**: Física do Minecraft
-- **minecraft-protocol**: Protocolo alternativo
+### Bot não conecta ao servidor
+- Verifique se o servidor está online (Aternos precisa estar ativo)
+- Confirme o endereço e porta no `config.json`
+- Verifique sua conexão com internet
 
-## 🎯 Funcionalidades
+### Erro na API do Gemini
+- Confirme se a API key está correta no `config.json`
+- Verifique se você tem quota disponível na API do Gemini
+- Acesse: https://makersuite.google.com/app/apikey
 
-- ✅ Conexão com servidor Bedrock
-- ✅ Processamento de comandos com IA
-- ✅ Navegação inteligente
-- ✅ Sistema de chat
-- ✅ Detecção de jogadores
-- ⏳ Mineração (em desenvolvimento)
-- ⏳ Entrega de itens (em desenvolvimento)
-- ⏳ Crafting (planejado)
-- ⏳ Combate (planejado)
+### Bot não responde aos comandos
+- Certifique-se de usar o prefixo `!BOT` antes do comando
+- Verifique se o bot está online no servidor
+- Veja os logs no console para mais detalhes
 
-## 📄 Licença
+### Problemas no Termux
+```bash
+# Atualizar pacotes
+pkg update && pkg upgrade
 
-MIT License - Sinta-se livre para modificar e usar!
+# Reinstalar Python
+pkg install python -y
+
+# Reinstalar dependências
+pip install -r requirements.txt --force-reinstall
+```
+
+## 🌐 Informações do Servidor
+
+**Servidor Padrão:**
+- Endereço: FizAnal.aternos.me
+- Porta: 45203
+- Versão: Bedrock 1.21.120.4
+
+> ⚠️ **Nota**: Servidores Aternos desligam automaticamente após inatividade. Certifique-se de que o servidor está online antes de iniciar o bot.
+
+## 📝 Logs
+
+O bot gera logs detalhados no console:
+- `INFO`: Informações gerais
+- `WARNING`: Avisos
+- `ERROR`: Erros
+
+Exemplo:
+```
+2024-11-09 10:30:15 - bot_client - INFO - Conectando ao servidor...
+2024-11-09 10:30:16 - bedrock_connection - INFO - Conectado ao servidor Bedrock
+2024-11-09 10:30:17 - bot_client - INFO - bot Hailgames conectado com sucesso!
+```
+
+## 🛡️ Segurança
+
+- **API Key**: Mantenha sua chave do Gemini em segredo
+- **Servidor**: Use apenas em servidores onde você tem permissão
+- **Comandos**: O bot só executa comandos de jogadores no servidor
+
+## 📚 Tecnologias Utilizadas
+
+- **Python 3.10+**: Linguagem principal
+- **Google Gemini AI**: Processamento de linguagem natural
+- **Async/Await**: Operações assíncronas
+- **WebSocket**: Comunicação em tempo real
+- **Minecraft Bedrock Protocol**: Protocolo de comunicação
 
 ## 🤝 Contribuindo
 
-Contribuições são bem-vindas! Sinta-se à vontade para:
-- Reportar bugs
-- Sugerir novas features
-- Enviar pull requests
+Para melhorar o bot:
+1. Modifique os arquivos necessários
+2. Teste as mudanças
+3. Documente as alterações
 
-## 📞 Suporte
+## 📄 Licença
 
-Se tiver problemas ou dúvidas:
-1. ✅ Leia a seção de solução de problemas
-2. ✅ Verifique TERMUX_GUIDE.md para guia detalhado
-3. ✅ Veja os logs do console
-4. ✅ Abra uma issue no GitHub
+Este projeto é de uso pessoal e educacional.
+
+## 👨‍💻 Desenvolvedor
+
+Desenvolvido para o servidor Hailgames.
 
 ---
 
-**Desenvolvido com ❤️ para a comunidade Minecraft**
+## 🆘 Suporte
+
+Se encontrar problemas:
+1. Verifique os logs no console
+2. Revise a seção de Solução de Problemas
+3. Confirme que todas as dependências estão instaladas
+4. Verifique a conexão com o servidor
+
+**Bom jogo! 🎮**

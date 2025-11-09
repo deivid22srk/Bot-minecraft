@@ -1,12 +1,10 @@
 {
-  "botName": "bot Hailgames",
-  "server": {
-    "host": "FizAnal.aternos.me",
-    "port": 45203,
-    "version": "1.21.50"
-  },
-  "gemini": {
-    "apiKey": "AIzaSyAYp5RLEzwcrhWZlmGX_FQfNf0OzWszKqs"
-  },
-  "commandPrefix": "!BOT"
+    "bot_name": "bot Hailgames",
+    "server": {
+        "host": "FizAnal.aternos.me",
+        "port": 45203
+    },
+    "gemini_api_key": "AIzaSyAYp5RLEzwcrhWZlmGX_FQfNf0OzWszKqs",
+    "command_prefix": "!BOT",
+    "bot_version": "1.21.120.4"
 }
