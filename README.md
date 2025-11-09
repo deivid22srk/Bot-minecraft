@@ -15,6 +15,8 @@ Bot inteligente para Minecraft Bedrock 1.21.x controlado pela IA Gemini do Googl
 ### 1. Instalar o Termux
 Baixe o Termux na [F-Droid](https://f-droid.org/en/packages/com.termux/) ou [GitHub](https://github.com/termux/termux-app/releases)
 
+⚠️ **IMPORTANTE**: NÃO use o Termux da Play Store (está desatualizado)
+
 ### 2. Atualizar pacotes do Termux
 ```bash
 pkg update && pkg upgrade -y
@@ -36,20 +38,27 @@ git clone https://github.com/deivid22srk/Bot-minecraft.git
 cd Bot-minecraft
 ```
 
-### 6. Instalar dependências
+### 6. Dar permissão aos scripts
 ```bash
-npm install
+chmod +x *.sh
 ```
 
-### 7. Configurar (opcional)
-Edite o arquivo `config.json` se quiser mudar configurações:
+### 7. Instalar dependências
 ```bash
-nano config.json
+./install-termux.sh
 ```
+
+⚠️ **NOTA**: Você pode ver avisos sobre módulos nativos (`raknet-native`). Isso é normal! O bot funcionará mesmo com esses avisos.
 
 ### 8. Iniciar o bot
 ```bash
 npm start
+```
+
+ou
+
+```bash
+./start.sh
 ```
 
 ## ⚙️ Configuração
@@ -110,54 +119,40 @@ O bot responde apenas a mensagens que começam com `!BOT`. Exemplos:
 !BOT o que você pode fazer?
 ```
 
-## 🧠 Como Funciona
-
-1. **Detecção**: O bot monitora o chat do servidor
-2. **Ativação**: Quando detecta `!BOT`, captura o comando
-3. **Processamento IA**: Envia o comando para o Gemini
-4. **Análise**: O Gemini entende a intenção e retorna uma ação
-5. **Execução**: O bot executa a ação no jogo
-6. **Resposta**: Informa o jogador sobre o progresso
-
-## 📁 Estrutura do Projeto
-
-```
-Bot-minecraft/
-├── index.js           # Arquivo principal do bot
-├── geminiAI.js        # Integração com Google Gemini
-├── pathfinding.js     # Sistema de navegação
-├── botActions.js      # Ações do bot (minerar, entregar, etc)
-├── config.json        # Configurações
-├── package.json       # Dependências do Node.js
-└── README.md          # Este arquivo
-```
-
-## 🔧 Dependências
-
-- **bedrock-protocol**: Conexão com servidores Minecraft Bedrock
-- **@google/generative-ai**: API do Google Gemini
-- **vec3**: Manipulação de vetores 3D
-
 ## 🐛 Solução de Problemas
 
+### Erro de compilação do raknet-native
+
+**Sintoma**: Erros durante `npm install` relacionados a `raknet-native` ou `node-addon-api`
+
+**Solução**:
+```bash
+# Use a instalação sem módulos opcionais
+npm install --no-optional
+```
+
+ou
+
+```bash
+# Use o instalador fornecido
+./install-termux.sh
+```
+
+Esses erros são normais no Termux e o bot funcionará mesmo assim! 
+
 ### Bot não conecta ao servidor
-- Verifique se o servidor está online (Aternos precisa estar ativo)
-- Confirme o endereço e porta em `config.json`
-- Verifique sua conexão com a internet
+- ✅ Verifique se o servidor está online (Aternos precisa estar ativo)
+- ✅ Confirme o endereço e porta em `config.json`
+- ✅ Verifique sua conexão com a internet
 
 ### Bot não responde aos comandos
-- Certifique-se de usar o prefixo `!BOT`
-- Verifique se a API Key do Gemini está correta
-- Veja os logs no console para mais detalhes
-
-### Erro de instalação no Termux
-- Execute `pkg update && pkg upgrade` novamente
-- Tente `pkg install nodejs` se nodejs-lts não funcionar
-- Dê permissão de armazenamento: `termux-setup-storage`
+- ✅ Certifique-se de usar o prefixo `!BOT`
+- ✅ Verifique se a API Key do Gemini está correta
+- ✅ Veja os logs no console para mais detalhes
 
 ### Erro "API Key inválida"
-- Verifique se a API Key do Gemini está correta em `config.json`
-- Obtenha uma nova key em: https://makersuite.google.com/app/apikey
+- ✅ Verifique se a API Key do Gemini está correta em `config.json`
+- ✅ Obtenha uma nova key em: https://makersuite.google.com/app/apikey
 
 ## 📱 Dicas para Termux
 
@@ -177,36 +172,53 @@ npm start
 ```
 
 ### Economizar bateria
-- Use o plugin Wake Lock do Termux
-- Reduza o brilho da tela
-- Desative conexões desnecessárias
+1. Abra o menu lateral do Termux
+2. Ative "Acquire wakelock"
+3. Reduza o brilho da tela
+4. Desative conexões desnecessárias
 
-### Auto-iniciar bot
-Crie um script `start.sh`:
-```bash
-#!/data/data/com.termux/files/usr/bin/bash
-cd ~/Bot-minecraft
-npm start
+### Atalhos do Termux
+- `Volume Up + Q` - Mostrar teclas extras
+- `Volume Up + C` - Copiar
+- `Volume Up + V` - Colar
+- `Ctrl + C` - Parar programa
+- `Ctrl + L` - Limpar tela
+
+## 📁 Estrutura do Projeto
+
+```
+Bot-minecraft/
+├── index.js              # Arquivo principal do bot
+├── geminiAI.js           # Integração com Google Gemini
+├── pathfinding.js        # Sistema de navegação
+├── botActions.js         # Ações do bot (minerar, entregar, etc)
+├── config.json           # Configurações
+├── package.json          # Dependências do Node.js
+├── install-termux.sh     # Script de instalação
+├── start.sh              # Script para iniciar
+├── README.md             # Este arquivo
+├── TERMUX_GUIDE.md       # Guia detalhado do Termux
+└── EXAMPLES.md           # Exemplos de comandos
 ```
 
-Dê permissão:
-```bash
-chmod +x start.sh
-```
+## 🔧 Dependências
 
-Execute:
-```bash
-./start.sh
-```
+- **bedrock-protocol**: Conexão com servidores Minecraft Bedrock
+- **@google/generative-ai**: API do Google Gemini
+- **prismarine-physics**: Física do Minecraft
+- **minecraft-protocol**: Protocolo alternativo
 
-## 🎯 Funcionalidades Futuras
+## 🎯 Funcionalidades
 
-- [ ] Sistema de crafting
-- [ ] Construção automática
-- [ ] Farming automático
-- [ ] Combate e defesa
-- [ ] Exploração de cavernas
-- [ ] Backup de inventário
+- ✅ Conexão com servidor Bedrock
+- ✅ Processamento de comandos com IA
+- ✅ Navegação inteligente
+- ✅ Sistema de chat
+- ✅ Detecção de jogadores
+- ⏳ Mineração (em desenvolvimento)
+- ⏳ Entrega de itens (em desenvolvimento)
+- ⏳ Crafting (planejado)
+- ⏳ Combate (planejado)
 
 ## 📄 Licença
 
@@ -222,9 +234,10 @@ Contribuições são bem-vindas! Sinta-se à vontade para:
 ## 📞 Suporte
 
 Se tiver problemas ou dúvidas:
-1. Verifique a seção de solução de problemas
-2. Veja os logs do console
-3. Abra uma issue no GitHub
+1. ✅ Leia a seção de solução de problemas
+2. ✅ Verifique TERMUX_GUIDE.md para guia detalhado
+3. ✅ Veja os logs do console
+4. ✅ Abra uma issue no GitHub
 
 ---
 

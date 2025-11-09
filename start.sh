@@ -4,8 +4,8 @@ echo "🤖 Iniciando Bot Hailgames..."
 echo ""
 
 if [ ! -d "node_modules" ]; then
-    echo "📦 Instalando dependências..."
-    npm install
+    echo "📦 Primeira execução - instalando dependências..."
+    ./install-termux.sh
     echo ""
 fi
 
@@ -16,6 +16,7 @@ if [ ! -f "config.json" ]; then
 fi
 
 echo "🚀 Conectando ao servidor..."
+echo "⚠️  Se houver avisos sobre módulos nativos, eles podem ser ignorados."
 echo ""
 
 node index.js

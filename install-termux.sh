@@ -31,27 +31,33 @@ fi
 
 echo ""
 echo "📦 Instalando dependências do bot..."
-npm install
+echo "⚠️  NOTA: Alguns avisos sobre módulos nativos são normais e podem ser ignorados."
+echo ""
+
+npm install --no-optional
 
 if [ $? -eq 0 ]; then
     echo ""
     echo "✅ Instalação concluída com sucesso!"
-    echo ""
-    echo "🎮 Para iniciar o bot, execute:"
-    echo "   npm start"
-    echo ""
-    echo "📖 Ou use o script:"
-    echo "   ./start.sh"
-    echo ""
-    echo "💡 Dica: Use tmux para manter o bot rodando em background"
-    echo "   pkg install tmux"
-    echo "   tmux new -s minecraft"
-    echo ""
 else
     echo ""
-    echo "❌ Erro na instalação!"
-    echo "🔧 Tente executar manualmente:"
-    echo "   pkg update && pkg upgrade -y"
-    echo "   pkg install nodejs-lts git -y"
-    echo "   npm install"
+    echo "⚠️  Instalação parcial - tentando com módulos opcionais..."
+    npm install --legacy-peer-deps
 fi
+
+echo ""
+echo "🎮 Para iniciar o bot, execute:"
+echo "   npm start"
+echo ""
+echo "📖 Ou use o script:"
+echo "   ./start.sh"
+echo ""
+echo "💡 Dica: Use tmux para manter o bot rodando em background"
+echo "   pkg install tmux"
+echo "   tmux new -s minecraft"
+echo ""
+echo "📝 IMPORTANTE:"
+echo "   - Verifique se o servidor está online (Aternos precisa estar ativo)"
+echo "   - Edite config.json se precisar mudar as configurações"
+echo "   - Use 'npm start' para iniciar o bot"
+echo ""

@@ -28,7 +28,9 @@ class MinecraftBot {
         port: config.server.port,
         username: this.username,
         offline: true,
-        version: config.server.version
+        version: config.server.version,
+        skipPing: true,
+        conLog: console.debug.bind(console)
       });
 
       this.pathfinder = new Pathfinder(this);
@@ -37,8 +39,9 @@ class MinecraftBot {
       this.setupEventHandlers();
 
     } catch (error) {
-      console.error('❌ Erro ao conectar:', error);
-      setTimeout(() => this.connect(), 5000);
+      console.error('❌ Erro ao conectar:', error.message);
+      console.log('⏳ Tentando reconectar em 10 segundos...');
+      setTimeout(() => this.connect(), 10000);
     }
   }
 
@@ -50,6 +53,17 @@ class MinecraftBot {
       setTimeout(() => {
         this.sendChat('Olá! Sou o bot Hailgames, controlado por IA. Use !BOT seguido do seu comando para me controlar!');
       }, 2000);
+    });
+
+    this.client.on('join', () => {
+      console.log('✅ Bot entrou no servidor!');
+    });
+
+    this.client.on('start_game', (packet) => {
+      console.log('🎮 Jogo iniciado!');
+      if (packet.position) {
+        this.position = packet.position;
+      }
     });
 
     this.client.on('move_player', (packet) => {
@@ -108,17 +122,24 @@ class MinecraftBot {
     });
 
     this.client.on('disconnect', (packet) => {
-      console.log('❌ Desconectado do servidor:', packet.message || 'Sem motivo');
-      setTimeout(() => this.connect(), 5000);
+      const reason = packet.message || packet.reason || 'Sem motivo especificado';
+      console.log('❌ Desconectado do servidor:', reason);
+      console.log('⏳ Tentando reconectar em 10 segundos...');
+      setTimeout(() => this.connect(), 10000);
     });
 
     this.client.on('error', (error) => {
-      console.error('❌ Erro no cliente:', error);
+      console.error('❌ Erro no cliente:', error.message);
     });
 
     this.client.on('kick', (reason) => {
       console.log('❌ Kickado do servidor:', reason);
-      setTimeout(() => this.connect(), 5000);
+      console.log('⏳ Tentando reconectar em 10 segundos...');
+      setTimeout(() => this.connect(), 10000);
+    });
+
+    this.client.on('close', () => {
+      console.log('🔌 Conexão fechada');
     });
   }
 
@@ -156,6 +177,8 @@ class MinecraftBot {
 
   sendChat(message) {
     try {
+      if (!this.client) return;
+      
       this.client.queue('text', {
         type: 'chat',
         needs_translation: false,
@@ -166,15 +189,17 @@ class MinecraftBot {
       });
       console.log(`📤 [BOT]: ${message}`);
     } catch (error) {
-      console.error('❌ Erro ao enviar mensagem:', error);
+      console.error('❌ Erro ao enviar mensagem:', error.message);
     }
   }
 
   queue(packetName, data) {
     try {
-      this.client.queue(packetName, data);
+      if (this.client) {
+        this.client.queue(packetName, data);
+      }
     } catch (error) {
-      console.error(`❌ Erro ao enviar pacote ${packetName}:`, error);
+      console.error(`❌ Erro ao enviar pacote ${packetName}:`, error.message);
     }
   }
 
@@ -207,4 +232,12 @@ process.on('SIGINT', () => {
     bot.client.close();
   }
   process.exit(0);
+});
+
+process.on('uncaughtException', (error) => {
+  console.error('❌ Erro não capturado:', error.message);
+});
+
+process.on('unhandledRejection', (error) => {
+  console.error('❌ Promise rejeitada:', error.message);
 });
