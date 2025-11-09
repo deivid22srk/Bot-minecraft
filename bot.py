@@ -61,7 +61,7 @@ class MinecraftBot:
                 'playerPosition': self.client.players.get(player_name, {}).get('position', {'x': 0, 'y': 0, 'z': 0})
             }
             
-            action_data = await self.gemini.process_command(command, context)
+            action_data = self.gemini.process_command(command, context)
             logging.info(f"🧠 Gemini respondeu: {json.dumps(action_data, ensure_ascii=False, indent=2)}")
             
             # Executar ação

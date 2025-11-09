@@ -2,6 +2,7 @@
 
 echo "╔════════════════════════════════════════╗"
 echo "║  Bot Hailgames - Instalador Python    ║"
+echo "║         VERSÃO SEM RUST                ║"
 echo "╚════════════════════════════════════════╝"
 echo ""
 
@@ -20,20 +21,12 @@ else
 fi
 
 echo ""
-
-# Instalar pip
-echo "📦 Verificando pip..."
-if ! command -v pip &> /dev/null; then
-    echo "Instalando pip..."
-    pkg install python-pip -y
-fi
-
-echo ""
 echo "📦 Instalando dependências Python..."
-echo "⚡ Isso é MUITO MAIS RÁPIDO que Node.js!"
+echo "⚡ APENAS requests - SEM compilação!"
 echo ""
 
-pip install -r requirements.txt --upgrade
+# Instalar apenas requests (puro Python)
+pip install requests --upgrade
 
 if [ $? -eq 0 ]; then
     echo ""
@@ -45,17 +38,17 @@ if [ $? -eq 0 ]; then
     echo "📖 Ou use o script:"
     echo "   ./start-python.sh"
     echo ""
-    echo "💡 Vantagens da versão Python:"
-    echo "   ✅ SEM problemas de compilação"
-    echo "   ✅ Instalação rápida e simples"
-    echo "   ✅ Usa menos memória"
-    echo "   ✅ Mais estável no Termux"
+    echo "💡 Vantagens desta versão:"
+    echo "   ✅ SEM problemas de compilação (Rust, C++, etc)"
+    echo "   ✅ Instalação em 30 segundos"
+    echo "   ✅ Usa apenas requests (biblioteca pura Python)"
+    echo "   ✅ Funciona 100% no Termux"
     echo ""
 else
     echo ""
     echo "❌ Erro na instalação!"
     echo "🔧 Tente executar manualmente:"
     echo "   pkg update && pkg upgrade -y"
-    echo "   pkg install python python-pip -y"
-    echo "   pip install google-generativeai aiohttp"
+    echo "   pkg install python -y"
+    echo "   pip install requests"
 fi
