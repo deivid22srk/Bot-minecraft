@@ -1,22 +1,16 @@
 {
-  "name": "bot-hailgames",
-  "version": "1.0.0",
-  "description": "Bot do Minecraft Bedrock controlado por IA Gemini",
-  "main": "index.js",
-  "type": "module",
+  "name": "bot-hailgames-bedrock",
+  "version": "2.1.0",
+  "description": "Cliente Bedrock real para Bot Hailgames",
+  "main": "bedrock_client.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node bedrock_client.js",
+    "test": "node test_bedrock.js"
   },
-  "keywords": ["minecraft", "bedrock", "bot", "gemini", "ai"],
-  "author": "",
-  "license": "MIT",
   "dependencies": {
-    "@google/generative-ai": "^0.21.0",
-    "prismarine-physics": "^1.8.0",
-    "minecraft-protocol": "^1.47.0",
     "bedrock-protocol": "^3.10.0"
   },
-  "optionalDependencies": {
-    "raknet-native": "^1.2.3"
+  "engines": {
+    "node": ">=14.0.0"
   }
 }

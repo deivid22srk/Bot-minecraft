@@ -15,7 +15,13 @@
 
 3. Aguarde a instalação
 
-4. Inicie o bot:
+4. (Opcional) Teste a conexão:
+   python test_connection.py
+
+5. (Opcional) Teste a IA:
+   python test_bot_interactive.py
+
+6. Inicie o bot:
    python main.py
 
 
@@ -45,13 +51,20 @@ Para alterar, edite: config.json
 Bot não conecta:
   → Verifique se o servidor Aternos está ONLINE
   → Confirme sua conexão com internet
+  → O bot funciona em MODO SIMULAÇÃO se não conectar
+  → Use: python test_connection.py
 
 Erro de API:
   → Verifique a API key no config.json
+  → Teste com: python test_bot_interactive.py
 
 Bot não responde:
   → Use o prefixo !BOT antes do comando
   → Exemplo: "!BOT olá"
+
+Erro ao instalar:
+  → NUNCA use "pip install --upgrade pip"
+  → Use apenas: pip install -r requirements.txt
 
 
 📞 COMANDOS ÚTEIS:

@@ -1,7 +1,6 @@
 import asyncio
 import logging
 from typing import Callable, Optional
-import websocket
 import json
 import time
 
@@ -13,60 +12,74 @@ class BedrockConnection:
         self.port = port
         self.username = username
         
-        self.ws = None
         self.connected = False
         
-        self.position = {'x': 0, 'y': 0, 'z': 0}
+        self.position = {'x': 0, 'y': 64, 'z': 0}
         self.health = 20
         self.inventory = {}
         
         self.chat_callback = None
         self.position_callback = None
         
-        self.packet_queue = asyncio.Queue()
         self.running = False
+        self.simulate_mode = True
         
     async def connect(self):
         try:
-            from bedrock_protocol import Client
+            logger.info(f"Tentando conectar a {self.host}:{self.port}...")
             
-            self.client = Client(self.host, self.port)
-            await asyncio.to_thread(self.client.authenticate, self.username)
-            await asyncio.to_thread(self.client.connect)
+            try:
+                import websocket
+                
+                ws_url = f"ws://{self.host}:{self.port}"
+                logger.info(f"Conectando via WebSocket: {ws_url}")
+                
+                self.ws = await asyncio.to_thread(
+                    websocket.create_connection,
+                    ws_url,
+                    timeout=5
+                )
+                
+                self.simulate_mode = False
+                self.connected = True
+                logger.info(f"✓ Conectado ao servidor via WebSocket!")
+                
+            except Exception as e:
+                logger.warning(f"WebSocket não disponível: {e}")
+                logger.info("Iniciando em modo simulação...")
+                self.simulate_mode = True
+                self.connected = True
             
-            self.connected = True
             self.running = True
             
-            asyncio.create_task(self._packet_handler())
+            if self.simulate_mode:
+                asyncio.create_task(self._simulate_connection())
+                logger.info(f"✓ Bot {self.username} iniciado em modo simulação")
+                logger.info("  Todos os comandos serão logados no console")
+            else:
+                asyncio.create_task(self._packet_handler())
             
-            logger.info(f"Conectado ao servidor Bedrock como {self.username}")
-            
-        except ImportError:
-            logger.warning("bedrock_protocol não disponível, usando implementação alternativa")
-            await self._connect_alternative()
         except Exception as e:
             logger.error(f"Erro ao conectar: {e}")
-            await self._connect_alternative()
-    
-    async def _connect_alternative(self):
-        try:
-            import mcstatus
-            
-            logger.info("Tentando conexão alternativa...")
-            self.connected = True
-            self.running = True
-            
-            asyncio.create_task(self._simulate_connection())
-            
-        except Exception as e:
-            logger.error(f"Erro na conexão alternativa: {e}")
             logger.info("Iniciando em modo simulação...")
+            self.simulate_mode = True
             self.connected = True
             self.running = True
             asyncio.create_task(self._simulate_connection())
     
     async def _simulate_connection(self):
-        logger.info("Bot em modo simulação - logs de ações serão mostrados no console")
+        logger.info("=" * 60)
+        logger.info("BOT EM MODO SIMULAÇÃO")
+        logger.info("=" * 60)
+        logger.info("")
+        logger.info("O bot está funcionando, mas não conectado ao servidor real.")
+        logger.info("Todas as ações serão mostradas aqui no console.")
+        logger.info("")
+        logger.info("Para conectar ao servidor real, instale bibliotecas adicionais:")
+        logger.info("  pip install bedrock-protocol")
+        logger.info("")
+        logger.info("=" * 60)
+        
         while self.running:
             await asyncio.sleep(1)
     
@@ -74,13 +87,13 @@ class BedrockConnection:
         self.running = False
         self.connected = False
         
-        if hasattr(self, 'client'):
+        if hasattr(self, 'ws') and self.ws:
             try:
-                await asyncio.to_thread(self.client.disconnect)
+                await asyncio.to_thread(self.ws.close)
             except:
                 pass
         
-        logger.info("Desconectado do servidor")
+        logger.info("✓ Desconectado do servidor")
     
     async def update(self):
         if not self.running:
@@ -91,8 +104,9 @@ class BedrockConnection:
     async def _packet_handler(self):
         while self.running:
             try:
-                if hasattr(self, 'client'):
-                    packet = await asyncio.to_thread(self.client.read_packet)
+                if hasattr(self, 'ws') and self.ws:
+                    data = await asyncio.to_thread(self.ws.recv)
+                    packet = json.loads(data)
                     await self._process_packet(packet)
             except Exception as e:
                 logger.error(f"Erro ao processar pacote: {e}")
@@ -132,71 +146,93 @@ class BedrockConnection:
         self.position_callback = callback
     
     async def send_chat(self, message: str):
-        logger.info(f"[CHAT] {self.username}: {message}")
+        timestamp = time.strftime("%H:%M:%S")
+        logger.info(f"[{timestamp}] [{self.username}] {message}")
         
-        if hasattr(self, 'client'):
+        if not self.simulate_mode and hasattr(self, 'ws') and self.ws:
             try:
+                packet = {
+                    'type': 'text',
+                    'message': message
+                }
                 await asyncio.to_thread(
-                    self.client.send_packet,
-                    {'type': 'text', 'message': message}
+                    self.ws.send,
+                    json.dumps(packet)
                 )
-            except:
-                pass
+            except Exception as e:
+                logger.error(f"Erro ao enviar chat: {e}")
     
     async def send_command(self, command: str):
-        logger.info(f"[COMMAND] /{command}")
+        timestamp = time.strftime("%H:%M:%S")
+        logger.info(f"[{timestamp}] [COMANDO] /{command}")
         
-        if hasattr(self, 'client'):
+        if not self.simulate_mode and hasattr(self, 'ws') and self.ws:
             try:
+                packet = {
+                    'type': 'command_request',
+                    'command': command
+                }
                 await asyncio.to_thread(
-                    self.client.send_packet,
-                    {'type': 'command_request', 'command': command}
+                    self.ws.send,
+                    json.dumps(packet)
                 )
-            except:
-                pass
+            except Exception as e:
+                logger.error(f"Erro ao enviar comando: {e}")
     
     async def move_to(self, x: float, y: float, z: float):
-        logger.info(f"[MOVE] Movendo para ({x}, {y}, {z})")
+        timestamp = time.strftime("%H:%M:%S")
+        logger.info(f"[{timestamp}] [MOVIMENTO] → ({x:.1f}, {y:.1f}, {z:.1f})")
         
         self.position = {'x': x, 'y': y, 'z': z}
         
-        if hasattr(self, 'client'):
+        if not self.simulate_mode and hasattr(self, 'ws') and self.ws:
             try:
+                packet = {
+                    'type': 'move_player',
+                    'position': self.position
+                }
                 await asyncio.to_thread(
-                    self.client.send_packet,
-                    {'type': 'move_player', 'position': self.position}
+                    self.ws.send,
+                    json.dumps(packet)
                 )
-            except:
-                pass
+            except Exception as e:
+                logger.error(f"Erro ao mover: {e}")
     
     async def break_block(self, x: int, y: int, z: int):
-        logger.info(f"[BREAK] Quebrando bloco em ({x}, {y}, {z})")
+        timestamp = time.strftime("%H:%M:%S")
+        logger.info(f"[{timestamp}] [QUEBRAR] Bloco em ({x}, {y}, {z})")
         
-        if hasattr(self, 'client'):
+        if not self.simulate_mode and hasattr(self, 'ws') and self.ws:
             try:
+                packet = {
+                    'type': 'player_action',
+                    'action': 'break',
+                    'position': {'x': x, 'y': y, 'z': z}
+                }
                 await asyncio.to_thread(
-                    self.client.send_packet,
-                    {'type': 'player_action', 'action': 'start_break', 'position': {'x': x, 'y': y, 'z': z}}
+                    self.ws.send,
+                    json.dumps(packet)
                 )
-                await asyncio.sleep(0.5)
-                await asyncio.to_thread(
-                    self.client.send_packet,
-                    {'type': 'player_action', 'action': 'finish_break', 'position': {'x': x, 'y': y, 'z': z}}
-                )
-            except:
-                pass
+            except Exception as e:
+                logger.error(f"Erro ao quebrar bloco: {e}")
     
     async def place_block(self, x: int, y: int, z: int, block_type: str):
-        logger.info(f"[PLACE] Colocando {block_type} em ({x}, {y}, {z})")
+        timestamp = time.strftime("%H:%M:%S")
+        logger.info(f"[{timestamp}] [COLOCAR] {block_type} em ({x}, {y}, {z})")
         
-        if hasattr(self, 'client'):
+        if not self.simulate_mode and hasattr(self, 'ws') and self.ws:
             try:
+                packet = {
+                    'type': 'use_item',
+                    'block_position': {'x': x, 'y': y, 'z': z},
+                    'item': block_type
+                }
                 await asyncio.to_thread(
-                    self.client.send_packet,
-                    {'type': 'use_item', 'block_position': {'x': x, 'y': y, 'z': z}, 'item': block_type}
+                    self.ws.send,
+                    json.dumps(packet)
                 )
-            except:
-                pass
+            except Exception as e:
+                logger.error(f"Erro ao colocar bloco: {e}")
     
     def get_position(self):
         return self.position.copy()

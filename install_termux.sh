@@ -16,8 +16,7 @@ pkg install -y python python-pip git
 
 echo ""
 echo "[3/5] Instalando bibliotecas Python..."
-pip install --upgrade pip
-pip install -r requirements.txt
+pip install -r requirements.txt --no-cache-dir
 
 echo ""
 echo "[4/5] Verificando instalação..."

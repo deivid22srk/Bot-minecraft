@@ -6,19 +6,25 @@ Bot inteligente para Minecraft Bedrock Edition 1.21.120.4, controlado pela IA Ge
 
 - **IA Avançada**: Controlado pela API Gemini para processamento natural de comandos
 - **Comandos Inteligentes**: Responde apenas quando você usa o prefixo `!BOT`
-- **Ações Autônomas**: 
-  - Ir até jogadores
-  - Coletar blocos (madeira, pedra, etc)
-  - Entregar itens
-  - Seguir jogadores
-  - Conversar no chat
+- **CONEXÃO REAL**: Agora conecta de verdade ao servidor Bedrock via bedrock-protocol!
+- **Dois Modos de Operação**:
+  - **Modo Real**: Conecta ao servidor e executa ações reais no mundo
+  - **Modo Simulação**: Funciona localmente para testes (sem servidor)
+- **Ações Autônomas no Mundo**: 
+  - Ir até jogadores (movimento real)
+  - Coletar blocos (quebra blocos no mundo)
+  - Entregar itens (via comando /give)
+  - Seguir jogadores (movimento contínuo)
+  - Conversar no chat (mensagens reais)
+- **Arquitetura Híbrida**: Python (IA Gemini) + Node.js (Bedrock Protocol)
+- **Leve e Otimizado**: Funciona perfeitamente no Termux
 
 ## 📋 Requisitos
 
 - Termux (Android)
-- Python 3.10+
+- Python 3.10+ (testado com Python 3.12)
 - Conexão com internet
-- Servidor Minecraft Bedrock
+- Servidor Minecraft Bedrock (opcional - funciona em modo simulação)
 
 ## 🚀 Instalação no Termux
 
@@ -32,17 +38,55 @@ unzip bot-hailgames.zip
 cd bot-hailgames
 ```
 
-### 3. Executar instalador
+### 3. Escolher modo de instalação
+
+#### OPÇÃO A: Modo Real (Recomendado - Conexão Real ao Servidor)
+```bash
+chmod +x install_termux_real.sh
+./install_termux_real.sh
+```
+Instala Python + Node.js + bedrock-protocol
+
+#### OPÇÃO B: Modo Simulação (Apenas Python, sem Node.js)
 ```bash
 chmod +x install_termux.sh
 ./install_termux.sh
 ```
+Instala apenas Python (modo simulação)
 
-### 4. Iniciar o bot
+### 4. Testar instalação (opcional)
+
+#### Testar conexão Bedrock (só modo real)
+```bash
+node test_bedrock.js
+```
+
+#### Testar conexão TCP
+```bash
+python test_connection.py
+```
+
+#### Testar IA Gemini
+```bash
+python test_bot_interactive.py
+```
+
+### 5. Iniciar o bot
+
+#### MODO REAL (conecta ao servidor de verdade)
+```bash
+python main_real.py
+```
+Ou use o script:
+```bash
+chmod +x start_real.sh
+./start_real.sh
+```
+
+#### MODO SIMULAÇÃO (testes locais)
 ```bash
 python main.py
 ```
-
 Ou use o script:
 ```bash
 chmod +x start.sh
@@ -142,12 +186,72 @@ bot-hailgames/
 └── README.md              # Este arquivo
 ```
 
+## 🎯 Dois Modos de Operação
+
+### 🌐 MODO REAL (Recomendado)
+
+**Arquivo**: `main_real.py`
+
+Conecta **DE VERDADE** ao servidor Minecraft Bedrock usando bedrock-protocol!
+
+**Características**:
+- ✓ Conexão real via protocolo Bedrock
+- ✓ Bot aparece no servidor como jogador
+- ✓ Executa ações REAIS no mundo:
+  - Se move de verdade
+  - Quebra blocos reais
+  - Envia mensagens no chat
+  - Interage com jogadores
+- ✓ Usa Python (IA Gemini) + Node.js (bedrock-protocol)
+- ✓ Arquitetura híbrida otimizada
+
+**Como usar**:
+```bash
+python main_real.py
+```
+
+**Requisitos**:
+- Node.js instalado
+- bedrock-protocol (npm install)
+- Servidor Bedrock online
+
+---
+
+### 🧪 MODO SIMULAÇÃO
+
+**Arquivo**: `main.py`
+
+Funciona localmente sem conexão ao servidor. Útil para:
+- Testar a IA Gemini
+- Desenvolver novos comandos
+- Ver como o bot funciona antes de conectar
+
+**Características**:
+- ✓ IA Gemini processa comandos normalmente
+- ✓ Todas as ações são logadas no console
+- ✓ Você pode testar todos os comandos
+- ✓ Não precisa de servidor online
+- ✗ Sem conexão real com Minecraft
+- ✗ Ações apenas simuladas
+
+**Como usar**:
+```bash
+python main.py
+```
+
+**Teste interativo da IA**:
+```bash
+python test_bot_interactive.py
+```
+
 ## 🔧 Solução de Problemas
 
 ### Bot não conecta ao servidor
 - Verifique se o servidor está online (Aternos precisa estar ativo)
 - Confirme o endereço e porta no `config.json`
 - Verifique sua conexão com internet
+- Use `python test_connection.py` para testar a conexão
+- **NOTA**: O bot funciona em modo simulação mesmo sem conexão real
 
 ### Erro na API do Gemini
 - Confirme se a API key está correta no `config.json`
@@ -200,13 +304,87 @@ Exemplo:
 - **Servidor**: Use apenas em servidores onde você tem permissão
 - **Comandos**: O bot só executa comandos de jogadores no servidor
 
+## 🏗️ Arquitetura Híbrida (Modo Real)
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                    JOGADOR NO MINECRAFT                  │
+│         Envia: "!BOT pegue madeira pra mim"             │
+└────────────────────────┬────────────────────────────────┘
+                         │
+                         ▼
+┌─────────────────────────────────────────────────────────┐
+│              BEDROCK CLIENT (Node.js)                    │
+│                  bedrock_client.js                       │
+│  • Conecta ao servidor Bedrock                          │
+│  • Recebe mensagens do chat                             │
+│  • Salva comando em: command_input.json                 │
+└────────────────────────┬────────────────────────────────┘
+                         │
+                         ▼
+┌─────────────────────────────────────────────────────────┐
+│              PYTHON BRIDGE (main_real.py)               │
+│  • Lê command_input.json                                │
+│  • Envia comando para Gemini AI                         │
+│  • Recebe ação estruturada                              │
+│  • Salva em: action_output.json                         │
+└────────────────────────┬────────────────────────────────┘
+                         │
+                         ▼
+┌─────────────────────────────────────────────────────────┐
+│              GEMINI AI (gemini_handler.py)              │
+│  • Processa linguagem natural                           │
+│  • Identifica ação: "collect_and_give"                  │
+│  • Retorna JSON estruturado                             │
+└────────────────────────┬────────────────────────────────┘
+                         │
+                         ▼
+┌─────────────────────────────────────────────────────────┐
+│              BEDROCK CLIENT (Node.js)                    │
+│  • Lê action_output.json                                │
+│  • Executa ações no servidor:                           │
+│    - Coleta blocos (quebra)                             │
+│    - Move até jogador                                   │
+│    - Entrega itens (/give)                              │
+│  • Envia mensagens no chat                              │
+└────────────────────────┬────────────────────────────────┘
+                         │
+                         ▼
+┌─────────────────────────────────────────────────────────┐
+│                    SERVIDOR MINECRAFT                    │
+│            Bot executa ações no mundo real               │
+└─────────────────────────────────────────────────────────┘
+```
+
+**Por que arquitetura híbrida?**
+- ✓ Python é melhor para IA e processamento de dados
+- ✓ Node.js tem bedrock-protocol estável e funcional
+- ✓ Comunicação via arquivos JSON é simples e confiável
+- ✓ Cada tecnologia faz o que faz de melhor
+
 ## 📚 Tecnologias Utilizadas
 
-- **Python 3.10+**: Linguagem principal
-- **Google Gemini AI**: Processamento de linguagem natural
+### Python (IA e Lógica)
+- **Python 3.10+**: Linguagem principal (compatível com Python 3.12)
+- **Google Gemini API REST**: Processamento de linguagem natural
+- **Requests**: Cliente HTTP para API Gemini
 - **Async/Await**: Operações assíncronas
-- **WebSocket**: Comunicação em tempo real
-- **Minecraft Bedrock Protocol**: Protocolo de comunicação
+
+### Node.js (Conexão Bedrock)
+- **Node.js 14+**: Runtime JavaScript
+- **bedrock-protocol**: Protocolo Minecraft Bedrock
+- **npm**: Gerenciador de pacotes
+
+## ✨ Otimizações para Termux
+
+Esta versão foi otimizada especialmente para rodar no Termux:
+- ✓ Apenas 2 dependências leves (requests, websocket-client)
+- ✓ Sem dependências que precisam compilação (Rust, C++)
+- ✓ API Gemini via REST (sem google-generativeai pesado)
+- ✓ Compatível com Python 3.12
+- ✓ Modo simulação para testes sem servidor
+- ✓ Scripts de instalação automática
+- ✓ Logs detalhados e coloridos
 
 ## 🤝 Contribuindo
 

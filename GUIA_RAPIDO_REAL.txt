@@ -1,0 +1,228 @@
+╔══════════════════════════════════════════════════════════════╗
+║           BOT HAILGAMES v2.1 - GUIA RÁPIDO                   ║
+║         Minecraft Bedrock Edition Bot - CONEXÃO REAL         ║
+╚══════════════════════════════════════════════════════════════╝
+
+📱 INSTALAÇÃO COMPLETA (MODO REAL):
+
+1. Abra o Termux
+2. Execute:
+   cd storage/downloads
+   unzip bot-hailgames.zip
+   cd bot-hailgames
+   chmod +x install_termux_real.sh
+   ./install_termux_real.sh
+
+3. Aguarde instalação (instala Python + Node.js + bedrock-protocol)
+
+4. Teste a conexão Bedrock:
+   node test_bedrock.js
+
+5. Inicie o bot (MODO REAL):
+   python main_real.py
+
+   Ou use o script:
+   chmod +x start_real.sh
+   ./start_real.sh
+
+
+═══════════════════════════════════════════════════════════════
+
+🎮 DOIS MODOS DE OPERAÇÃO:
+
+┌─────────────────────────────────────────────────────────────┐
+│ MODO REAL (main_real.py) - RECOMENDADO                     │
+├─────────────────────────────────────────────────────────────┤
+│ ✓ Conecta DE VERDADE ao servidor Bedrock                   │
+│ ✓ Bot aparece no jogo como jogador                         │
+│ ✓ Move, coleta blocos, interage de verdade                 │
+│ ✓ Python (IA) + Node.js (bedrock-protocol)                 │
+│                                                             │
+│ Iniciar: python main_real.py                               │
+└─────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────┐
+│ MODO SIMULAÇÃO (main.py) - TESTES                          │
+├─────────────────────────────────────────────────────────────┤
+│ ✓ Funciona sem servidor                                    │
+│ ✓ Testa IA Gemini                                          │
+│ ✗ Não conecta ao Minecraft                                 │
+│                                                             │
+│ Iniciar: python main.py                                    │
+└─────────────────────────────────────────────────────────────┘
+
+
+═══════════════════════════════════════════════════════════════
+
+🎯 COMANDOS DO BOT:
+
+IMPORTANTE: Todos os comandos devem começar com !BOT
+
+Exemplos no jogo:
+  !BOT venha até mim
+  !BOT pegue madeira pra mim e me entregue
+  !BOT me siga
+  !BOT pare
+  !BOT colete 20 pedras
+
+
+═══════════════════════════════════════════════════════════════
+
+🧪 TESTES DISPONÍVEIS:
+
+1. Testar conexão Bedrock (Node.js):
+   node test_bedrock.js
+   
+   → Testa se consegue conectar ao servidor via bedrock-protocol
+   → DEVE mostrar "✓ Bot entrou no mundo!" se funcionar
+
+2. Testar conexão TCP (Python):
+   python test_connection.py
+   
+   → Verifica se servidor está acessível via TCP
+   → Mostra diagnósticos de rede
+
+3. Testar IA Gemini (Interativo):
+   python test_bot_interactive.py
+   
+   → Testa a IA sem precisar de servidor
+   → Digite comandos e veja as respostas da IA
+
+
+═══════════════════════════════════════════════════════════════
+
+⚙️ CONFIGURAÇÃO:
+
+Arquivo: config.json
+
+{
+  "bot_name": "bot Hailgames",
+  "server": {
+    "host": "FizAnal.aternos.me",
+    "port": 45203
+  },
+  "gemini_api_key": "AIzaSyAYp5RLEzwcrhWZlmGX_FQfNf0OzWszKqs",
+  "command_prefix": "!BOT",
+  "bot_version": "1.21.120.4"
+}
+
+Para alterar servidor/porta/nome, edite este arquivo.
+
+
+═══════════════════════════════════════════════════════════════
+
+🔧 PROBLEMAS COMUNS:
+
+┌─────────────────────────────────────────────────────────────┐
+│ PROBLEMA: Bot não conecta ao servidor                      │
+├─────────────────────────────────────────────────────────────┤
+│ SOLUÇÕES:                                                   │
+│ 1. Inicie o servidor Aternos ANTES de rodar o bot         │
+│ 2. Aguarde 2-3 minutos para servidor iniciar              │
+│ 3. Teste: node test_bedrock.js                            │
+│ 4. Verifique porta no config.json                         │
+│ 5. Use python main.py (modo simulação) para testes        │
+└─────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────┐
+│ PROBLEMA: Erro "bedrock-protocol not found"                │
+├─────────────────────────────────────────────────────────────┤
+│ SOLUÇÕES:                                                   │
+│ 1. Execute: npm install                                    │
+│ 2. Ou: ./install_termux_real.sh                           │
+│ 3. Verifique se Node.js está instalado: node --version    │
+└─────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────┐
+│ PROBLEMA: Erro de API Gemini                               │
+├─────────────────────────────────────────────────────────────┤
+│ SOLUÇÕES:                                                   │
+│ 1. Verifique API key no config.json                       │
+│ 2. Teste: python test_bot_interactive.py                  │
+│ 3. Acesse: https://makersuite.google.com/app/apikey       │
+└─────────────────────────────────────────────────────────────┘
+
+
+═══════════════════════════════════════════════════════════════
+
+📊 ARQUITETURA (MODO REAL):
+
+JOGADOR digita comando
+        ↓
+BEDROCK CLIENT (Node.js) recebe
+        ↓
+Salva em command_input.json
+        ↓
+PYTHON lê e processa com GEMINI AI
+        ↓
+Salva ação em action_output.json
+        ↓
+BEDROCK CLIENT (Node.js) executa
+        ↓
+BOT age no MUNDO REAL
+
+
+═══════════════════════════════════════════════════════════════
+
+📦 ARQUIVOS PRINCIPAIS:
+
+main_real.py .............. Modo REAL (conecta ao servidor)
+main.py ................... Modo SIMULAÇÃO (local)
+bedrock_client.js ......... Cliente Bedrock (Node.js)
+gemini_handler.py ......... IA Gemini
+config.json ............... Configurações
+
+test_bedrock.js ........... Teste conexão Bedrock
+test_connection.py ........ Teste conexão TCP
+test_bot_interactive.py ... Teste IA interativo
+
+install_termux_real.sh .... Instalador COMPLETO
+install_termux.sh ......... Instalador BÁSICO
+
+
+═══════════════════════════════════════════════════════════════
+
+💡 DICAS:
+
+1. SEMPRE inicie o servidor Aternos ANTES do bot
+2. Aguarde servidor estar 100% online (não só "iniciando")
+3. Use node test_bedrock.js para confirmar conexão
+4. Modo simulação (main.py) funciona SEMPRE
+5. Modo real (main_real.py) precisa servidor online
+6. Ctrl+C para parar o bot
+
+
+═══════════════════════════════════════════════════════════════
+
+🌐 SERVIDOR PADRÃO:
+
+Endereço: FizAnal.aternos.me
+Porta: 45203
+Versão: Bedrock 1.21.120.4
+
+⚠️ Servidores Aternos desligam automaticamente!
+   Inicie o servidor ANTES de conectar o bot.
+
+
+═══════════════════════════════════════════════════════════════
+
+🎊 EXEMPLO DE USO COMPLETO:
+
+1. Iniciar servidor Aternos (https://aternos.org)
+2. Aguardar servidor ficar online (2-3 min)
+3. No Termux: node test_bedrock.js
+4. Se conectar: python main_real.py
+5. No Minecraft, digite: !BOT olá
+6. Bot responde e executa comandos!
+
+
+═══════════════════════════════════════════════════════════════
+
+✨ VERSÃO 2.1 - CONEXÃO REAL FUNCIONANDO! ✨
+
+Para documentação completa: README.md
+Para histórico de mudanças: CHANGELOG.md
+
+═══════════════════════════════════════════════════════════════
+
+Bom jogo! 🎮
